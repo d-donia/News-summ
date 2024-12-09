@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News Summarizer</title>
+    <style>
+        /* General styles for body */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+        }
+
+        /* Flexbox container to divide into 3 sections */
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Left and right sections with background images */
+        .left-section, .right-section {
+            flex: 0.5; /* Equal size for left and right sections */
+            background-size: cover;
+            background-position: center;
+        }
+
+        /* Add background images */
+        .left-section {
+            background-image: url({{ url_for('static', filename='images/background-left.jpg') }});
+        }
+        .right-section {
+            background-image: url({{ url_for('static', filename='images/background-right.jpg') }});
+        }
+
+        /* Center section containing form and summary */
+        .center-section {
+            flex: 3; /* Larger center section */
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f4f4;
+        }
+
+        /* Title centered */
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px; /* Space below the title */
+        }
+
+        /* Styling for the form elements (file input, select, button) */
+        form {
+            display: flex;
+            flex-direction: column; /* Arrange form elements in a column */
+            align-items: center; /* Center the elements horizontally */
+            width: 100%;
+            max-width: 600px; /* Set a maximum width for the form */
+        }
+
+        input[type="file"], button {
+            width: 100%; /* Make the elements full width */
+            max-width: 400px; /* Limit the max width */
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        /* Flex container for the dropdowns to align them horizontally */
+        .dropdown-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 400px; /* Limit the width for the dropdowns */
+            margin: 10px 0; /* Add margin between the file input and dropdowns */
+        }
+
+        /* Styling for each dropdown */
+        select {
+            width: 48%; /* Make each dropdown take up 48% of the width */
+            padding: 10px;
+            font-size: 16px;
+        }
+
+        label {
+            font-size: 16px;
+        }
+
+        /* Summary container styling */
+        .summary {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center horizontally */
+            width: 100%; /* Ensure full width */
+        }
+
+        textarea {
+            width: 100%; /* Full width */
+            max-width: 732px; /* Explicit width */
+            height: 253px; /* Explicit height */
+            padding: 10px;
+            font-size: 16px;
+            resize: none; /* Prevent resizing */
+            margin: 20px auto; /* Center horizontally with vertical margin */
+        }
+
+        /* Styling for the upload and summarize button */
+        button {
+            background-color: #e74c3c; /* Softer red */
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px; /* Vertical spacing */
+        }
+        button:hover {
+            background-color: #c0392b; /* Darker red on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Left section with background image -->
+        <div class="left-section"></div>
+
+        <!-- Center section with form elements -->
+        <div class="center-section">
+            <h1>NEWS SUMMARIZER</h1>
+
+            <form action="/" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".txt" multiple>
+
+                <!-- Container to hold the two dropdowns side by side -->
+                <div class="dropdown-container">
+                    <!-- First dropdown for algorithm choice -->
+                    <select name="algorithm" id="algorithm">
+                        <option value="k-means">K-Means</option>
+                        <option value="textRank">TextRank</option>
+                    </select>
+
+                    <!-- Second dropdown for model choice -->
+                    <select name="model" id="model">
+                        <option value="distill-bart">Distill-BART</option>
+                        <option value="t5">T5</option>
+                    </select>
+                </div>
+
+                {% if summary %}
+                    <div class="summary">
+                        <h2>Summary:</h2>
+                        <!-- Text box to display the summary -->
+                        <textarea readonly>{{ summary }}</textarea>
+                    </div>
+                {% endif %}
+
+                <!-- Centered and styled button below text box -->
+                <button type="submit">Upload and Summarize</button>
+            </form>
+        </div>
+
+        <!-- Right section with background image -->
+        <div class="right-section"></div>
+    </div>
+</body>
+</html>
